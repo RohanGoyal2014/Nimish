@@ -1,0 +1,631 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://proxyrental.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SoapClientService" targetNamespace="http://proxyrental.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="soapEndPoint_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <wsaw:UsingAddressing />
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" elementFormDefault="qualified" targetNamespace="http://proxyrental.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="TryRestoreOrLogin">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="user" nillable="true" type="tns:User" />
+            <xs:element minOccurs="0" name="session" type="tns:Session" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="User">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="GoogleCode" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Hash" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="PlatformVersion" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="User" nillable="true" type="tns:User" />
+      <xs:complexType name="Session">
+        <xs:annotation>
+          <xs:appinfo>
+            <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="0" name="UserSession" type="ser:guid" />
+          <xs:element minOccurs="0" name="UserToken" type="ser:guid" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="Session" nillable="true" type="tns:Session" />
+      <xs:element name="TryRestoreOrLoginResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="TryRestoreOrLoginResult" type="tns:Session" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Logout">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="userToken" type="tns:Session" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="LogoutResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="Synchronize">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="userToken" type="tns:Session" />
+            <xs:element minOccurs="0" name="wasExpiried" type="xs:boolean" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SynchronizeResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="wasExpiried" type="xs:boolean" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SynchronizeAll">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="userToken" type="ser:guid" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SynchronizeAllResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="SynchronizeAllResult" nillable="true" type="tns:SynchronizeAllResult" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="SynchronizeAllResult">
+        <xs:sequence>
+          <xs:element xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="ActiveSessions" nillable="true" type="q1:ArrayOfguid" />
+          <xs:element minOccurs="0" name="Error" type="xs:boolean" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="SynchronizeAllResult" nillable="true" type="tns:SynchronizeAllResult" />
+      <xs:element name="ChangeProxy">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="userToken" type="tns:Session" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ChangeProxyResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="ChangeProxyResult" type="tns:ChangeProxyResult" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="ChangeProxyResult">
+        <xs:annotation>
+          <xs:appinfo>
+            <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="0" name="AccessViolation" type="xs:boolean" />
+          <xs:element minOccurs="0" name="Error" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="FilterParamsHash" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="GlobalInfo" nillable="true" type="tns:GlobalInfo" />
+          <xs:element minOccurs="0" name="Hash" type="xs:int" />
+          <xs:element minOccurs="0" name="IpCycleId" type="ser:guid" />
+          <xs:element minOccurs="0" name="IsPrivatePool" type="xs:boolean" />
+          <xs:element minOccurs="0" name="IsSecuredProxy" type="xs:boolean" />
+          <xs:element minOccurs="0" name="MaxTCPConnections" type="xs:int" />
+          <xs:element minOccurs="0" name="NextGrantedAccess" type="xs:long" />
+          <xs:element minOccurs="0" name="ProxyChanges" type="xs:int" />
+          <xs:element minOccurs="0" name="ServerProxy" type="tns:IPSite" />
+          <xs:element minOccurs="0" name="Speed" type="xs:float" />
+          <xs:element minOccurs="0" name="ZeroBalance" type="xs:boolean" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ChangeProxyResult" nillable="true" type="tns:ChangeProxyResult" />
+      <xs:complexType name="GlobalInfo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="CLTime" nillable="true" type="xs:long" />
+          <xs:element minOccurs="0" name="CLTimeActuality" nillable="true" type="xs:long" />
+          <xs:element minOccurs="0" name="CLUri" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="City" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="CityCode" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="CountryName" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="CurrentIP" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Health" type="xs:double" />
+          <xs:element minOccurs="0" name="ISP" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Latitude" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Longitude" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Persistence" type="xs:double" />
+          <xs:element minOccurs="0" name="PostalCode" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="State" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="TimeZoneID" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="nearestInfos" nillable="true" type="tns:ArrayOfGlobalInfo" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="GlobalInfo" nillable="true" type="tns:GlobalInfo" />
+      <xs:complexType name="ArrayOfGlobalInfo">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="GlobalInfo" nillable="true" type="tns:GlobalInfo" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ArrayOfGlobalInfo" nillable="true" type="tns:ArrayOfGlobalInfo" />
+      <xs:complexType name="IPSite">
+        <xs:annotation>
+          <xs:appinfo>
+            <IsValueType xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsValueType>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:sequence>
+          <xs:element minOccurs="0" name="IP" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Port" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="IPSite" nillable="true" type="tns:IPSite" />
+      <xs:element name="GetProxyInfo">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="userToken" type="tns:Session" />
+            <xs:element minOccurs="0" name="globalInfoSort" nillable="true" type="tns:GlobalInfoSort" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:simpleType name="GlobalInfoSort">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="ByDistance" />
+          <xs:enumeration value="ByState" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:element name="GlobalInfoSort" nillable="true" type="tns:GlobalInfoSort" />
+      <xs:element name="GetProxyInfoResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="GetProxyInfoResult" nillable="true" type="tns:GlobalInfo" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetFilterList">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="userToken" type="tns:Session" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetFilterListResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="GetFilterListResult" nillable="true" type="tns:ArrayOfProxyFilter" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="ArrayOfProxyFilter">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ProxyFilter" nillable="true" type="tns:ProxyFilter" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ArrayOfProxyFilter" nillable="true" type="tns:ArrayOfProxyFilter" />
+      <xs:complexType name="ProxyFilter">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ID" type="xs:int" />
+          <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ProxyFilter" nillable="true" type="tns:ProxyFilter" />
+      <xs:element name="SetProxyFilter">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="userToken" type="tns:Session" />
+            <xs:element minOccurs="0" name="filter" nillable="true" type="tns:ProxyFilterParams" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="ProxyFilterParams">
+        <xs:sequence>
+          <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="ExcludingISPs" nillable="true" type="q2:ArrayOfstring" />
+          <xs:element minOccurs="0" name="GlobalInfoSort" type="tns:GlobalInfoSort" />
+          <xs:element minOccurs="0" name="SpeedQuality" type="xs:float" />
+          <xs:element minOccurs="0" name="Stability" type="xs:float" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ProxyFilterParams" nillable="true" type="tns:ProxyFilterParams" />
+      <xs:element name="SetProxyFilterResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetProxyFilters">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="userToken" type="tns:Session" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetProxyFiltersResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="GetProxyFiltersResult" nillable="true" type="tns:ArrayOfProxyFilterParamDescription" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="ArrayOfProxyFilterParamDescription">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ProxyFilterParamDescription" nillable="true" type="tns:ProxyFilterParamDescription" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ArrayOfProxyFilterParamDescription" nillable="true" type="tns:ArrayOfProxyFilterParamDescription" />
+      <xs:complexType name="ProxyFilterParamDescription">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="DefaultValue" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="MaxValue" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="MinValue" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="ParamId" type="xs:int" />
+          <xs:element minOccurs="0" name="PredefinedValues" nillable="true" type="tns:ArrayOfProxyFilterParamPredefinedValue" />
+          <xs:element minOccurs="0" name="ValueType" type="tns:ProxyFilterParamType" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ProxyFilterParamDescription" nillable="true" type="tns:ProxyFilterParamDescription" />
+      <xs:complexType name="ArrayOfProxyFilterParamPredefinedValue">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ProxyFilterParamPredefinedValue" nillable="true" type="tns:ProxyFilterParamPredefinedValue" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ArrayOfProxyFilterParamPredefinedValue" nillable="true" type="tns:ArrayOfProxyFilterParamPredefinedValue" />
+      <xs:complexType name="ProxyFilterParamPredefinedValue">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="DisplayValue" nillable="true" type="xs:string" />
+          <xs:element minOccurs="0" name="Value" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ProxyFilterParamPredefinedValue" nillable="true" type="tns:ProxyFilterParamPredefinedValue" />
+      <xs:simpleType name="ProxyFilterParamType">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="String" />
+          <xs:enumeration value="Bool" />
+          <xs:enumeration value="Long" />
+          <xs:enumeration value="Double" />
+          <xs:enumeration value="DateTime" />
+          <xs:enumeration value="TimeSpan" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:element name="ProxyFilterParamType" nillable="true" type="tns:ProxyFilterParamType" />
+      <xs:element name="SetProxyFilters">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="userToken" type="tns:Session" />
+            <xs:element minOccurs="0" name="filters" nillable="true" type="tns:ArrayOfProxyFilterParamValue" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="ArrayOfProxyFilterParamValue">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ProxyFilterParamValue" nillable="true" type="tns:ProxyFilterParamValue" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ArrayOfProxyFilterParamValue" nillable="true" type="tns:ArrayOfProxyFilterParamValue" />
+      <xs:complexType name="ProxyFilterParamValue">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="ParamId" type="xs:int" />
+          <xs:element minOccurs="0" name="Value" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ProxyFilterParamValue" nillable="true" type="tns:ProxyFilterParamValue" />
+      <xs:element name="SetProxyFiltersResponse">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SynchronizeV2">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="userToken" type="tns:Session" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SynchronizeV2Response">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="SynchronizeV2Result" type="tns:SynchronizeResult" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:simpleType name="SynchronizeResult">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="Ok" />
+          <xs:enumeration value="ExpiriedUser" />
+          <xs:enumeration value="InvalidUser" />
+          <xs:enumeration value="ProxyIsUnavailable" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:element name="SynchronizeResult" nillable="true" type="tns:SynchronizeResult" />
+    </xs:schema>
+    <xs:schema xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="anyType" nillable="true" type="xs:anyType" />
+      <xs:element name="anyURI" nillable="true" type="xs:anyURI" />
+      <xs:element name="base64Binary" nillable="true" type="xs:base64Binary" />
+      <xs:element name="boolean" nillable="true" type="xs:boolean" />
+      <xs:element name="byte" nillable="true" type="xs:byte" />
+      <xs:element name="dateTime" nillable="true" type="xs:dateTime" />
+      <xs:element name="decimal" nillable="true" type="xs:decimal" />
+      <xs:element name="double" nillable="true" type="xs:double" />
+      <xs:element name="float" nillable="true" type="xs:float" />
+      <xs:element name="int" nillable="true" type="xs:int" />
+      <xs:element name="long" nillable="true" type="xs:long" />
+      <xs:element name="QName" nillable="true" type="xs:QName" />
+      <xs:element name="short" nillable="true" type="xs:short" />
+      <xs:element name="string" nillable="true" type="xs:string" />
+      <xs:element name="unsignedByte" nillable="true" type="xs:unsignedByte" />
+      <xs:element name="unsignedInt" nillable="true" type="xs:unsignedInt" />
+      <xs:element name="unsignedLong" nillable="true" type="xs:unsignedLong" />
+      <xs:element name="unsignedShort" nillable="true" type="xs:unsignedShort" />
+      <xs:element name="char" nillable="true" type="tns:char" />
+      <xs:simpleType name="char">
+        <xs:restriction base="xs:int" />
+      </xs:simpleType>
+      <xs:element name="duration" nillable="true" type="tns:duration" />
+      <xs:simpleType name="duration">
+        <xs:restriction base="xs:duration">
+          <xs:pattern value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?" />
+          <xs:minInclusive value="-P10675199DT2H48M5.4775808S" />
+          <xs:maxInclusive value="P10675199DT2H48M5.4775807S" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:element name="guid" nillable="true" type="tns:guid" />
+      <xs:simpleType name="guid">
+        <xs:restriction base="xs:string">
+          <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:attribute name="FactoryType" type="xs:QName" />
+      <xs:attribute name="Id" type="xs:ID" />
+      <xs:attribute name="Ref" type="xs:IDREF" />
+    </xs:schema>
+    <xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/Arrays" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:complexType name="ArrayOfguid">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="guid" type="ser:guid" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ArrayOfguid" nillable="true" type="tns:ArrayOfguid" />
+      <xs:complexType name="ArrayOfstring">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="ArrayOfstring" nillable="true" type="tns:ArrayOfstring" />
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="SoapClientService_TryRestoreOrLogin_InputMessage">
+    <wsdl:part name="parameters" element="tns:TryRestoreOrLogin" />
+  </wsdl:message>
+  <wsdl:message name="SoapClientService_TryRestoreOrLogin_OutputMessage">
+    <wsdl:part name="parameters" element="tns:TryRestoreOrLoginResponse" />
+  </wsdl:message>
+  <wsdl:message name="SoapClientService_Logout_InputMessage">
+    <wsdl:part name="parameters" element="tns:Logout" />
+  </wsdl:message>
+  <wsdl:message name="SoapClientService_Logout_OutputMessage">
+    <wsdl:part name="parameters" element="tns:LogoutResponse" />
+  </wsdl:message>
+  <wsdl:message name="SoapClientService_Synchronize_InputMessage">
+    <wsdl:part name="parameters" element="tns:Synchronize" />
+  </wsdl:message>
+  <wsdl:message name="SoapClientService_Synchronize_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SynchronizeResponse" />
+  </wsdl:message>
+  <wsdl:message name="SoapClientService_SynchronizeAll_InputMessage">
+    <wsdl:part name="parameters" element="tns:SynchronizeAll" />
+  </wsdl:message>
+  <wsdl:message name="SoapClientService_SynchronizeAll_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SynchronizeAllResponse" />
+  </wsdl:message>
+  <wsdl:message name="SoapClientService_ChangeProxy_InputMessage">
+    <wsdl:part name="parameters" element="tns:ChangeProxy" />
+  </wsdl:message>
+  <wsdl:message name="SoapClientService_ChangeProxy_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ChangeProxyResponse" />
+  </wsdl:message>
+  <wsdl:message name="SoapClientService_GetProxyInfo_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetProxyInfo" />
+  </wsdl:message>
+  <wsdl:message name="SoapClientService_GetProxyInfo_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetProxyInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="SoapClientService_GetFilterList_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetFilterList" />
+  </wsdl:message>
+  <wsdl:message name="SoapClientService_GetFilterList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetFilterListResponse" />
+  </wsdl:message>
+  <wsdl:message name="SoapClientService_SetProxyFilter_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetProxyFilter" />
+  </wsdl:message>
+  <wsdl:message name="SoapClientService_SetProxyFilter_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetProxyFilterResponse" />
+  </wsdl:message>
+  <wsdl:message name="SoapClientService_GetProxyFilters_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetProxyFilters" />
+  </wsdl:message>
+  <wsdl:message name="SoapClientService_GetProxyFilters_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetProxyFiltersResponse" />
+  </wsdl:message>
+  <wsdl:message name="SoapClientService_SetProxyFilters_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetProxyFilters" />
+  </wsdl:message>
+  <wsdl:message name="SoapClientService_SetProxyFilters_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetProxyFiltersResponse" />
+  </wsdl:message>
+  <wsdl:message name="SoapClientService_SynchronizeV2_InputMessage">
+    <wsdl:part name="parameters" element="tns:SynchronizeV2" />
+  </wsdl:message>
+  <wsdl:message name="SoapClientService_SynchronizeV2_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SynchronizeV2Response" />
+  </wsdl:message>
+  <wsdl:portType name="SoapClientService">
+    <wsdl:operation name="TryRestoreOrLogin">
+      <wsdl:input wsaw:Action="http://proxyrental.org/SoapClientService/TryRestoreOrLogin" message="tns:SoapClientService_TryRestoreOrLogin_InputMessage" />
+      <wsdl:output wsaw:Action="http://proxyrental.org/SoapClientService/TryRestoreOrLoginResponse" message="tns:SoapClientService_TryRestoreOrLogin_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Logout">
+      <wsdl:input wsaw:Action="http://proxyrental.org/SoapClientService/Logout" message="tns:SoapClientService_Logout_InputMessage" />
+      <wsdl:output wsaw:Action="http://proxyrental.org/SoapClientService/LogoutResponse" message="tns:SoapClientService_Logout_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Synchronize">
+      <wsdl:input wsaw:Action="http://proxyrental.org/SoapClientService/Synchronize" message="tns:SoapClientService_Synchronize_InputMessage" />
+      <wsdl:output wsaw:Action="http://proxyrental.org/SoapClientService/SynchronizeResponse" message="tns:SoapClientService_Synchronize_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SynchronizeAll">
+      <wsdl:input wsaw:Action="http://proxyrental.org/SoapClientService/SynchronizeAll" message="tns:SoapClientService_SynchronizeAll_InputMessage" />
+      <wsdl:output wsaw:Action="http://proxyrental.org/SoapClientService/SynchronizeAllResponse" message="tns:SoapClientService_SynchronizeAll_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ChangeProxy">
+      <wsdl:input wsaw:Action="http://proxyrental.org/SoapClientService/ChangeProxy" message="tns:SoapClientService_ChangeProxy_InputMessage" />
+      <wsdl:output wsaw:Action="http://proxyrental.org/SoapClientService/ChangeProxyResponse" message="tns:SoapClientService_ChangeProxy_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetProxyInfo">
+      <wsdl:input wsaw:Action="http://proxyrental.org/SoapClientService/GetProxyInfo" message="tns:SoapClientService_GetProxyInfo_InputMessage" />
+      <wsdl:output wsaw:Action="http://proxyrental.org/SoapClientService/GetProxyInfoResponse" message="tns:SoapClientService_GetProxyInfo_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetFilterList">
+      <wsdl:input wsaw:Action="http://proxyrental.org/SoapClientService/GetFilterList" message="tns:SoapClientService_GetFilterList_InputMessage" />
+      <wsdl:output wsaw:Action="http://proxyrental.org/SoapClientService/GetFilterListResponse" message="tns:SoapClientService_GetFilterList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetProxyFilter">
+      <wsdl:input wsaw:Action="http://proxyrental.org/SoapClientService/SetProxyFilter" message="tns:SoapClientService_SetProxyFilter_InputMessage" />
+      <wsdl:output wsaw:Action="http://proxyrental.org/SoapClientService/SetProxyFilterResponse" message="tns:SoapClientService_SetProxyFilter_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetProxyFilters">
+      <wsdl:input wsaw:Action="http://proxyrental.org/SoapClientService/GetProxyFilters" message="tns:SoapClientService_GetProxyFilters_InputMessage" />
+      <wsdl:output wsaw:Action="http://proxyrental.org/SoapClientService/GetProxyFiltersResponse" message="tns:SoapClientService_GetProxyFilters_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetProxyFilters">
+      <wsdl:input wsaw:Action="http://proxyrental.org/SoapClientService/SetProxyFilters" message="tns:SoapClientService_SetProxyFilters_InputMessage" />
+      <wsdl:output wsaw:Action="http://proxyrental.org/SoapClientService/SetProxyFiltersResponse" message="tns:SoapClientService_SetProxyFilters_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SynchronizeV2">
+      <wsdl:input wsaw:Action="http://proxyrental.org/SoapClientService/SynchronizeV2" message="tns:SoapClientService_SynchronizeV2_InputMessage" />
+      <wsdl:output wsaw:Action="http://proxyrental.org/SoapClientService/SynchronizeV2Response" message="tns:SoapClientService_SynchronizeV2_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="soapEndPoint" type="tns:SoapClientService">
+    <wsp:PolicyReference URI="#soapEndPoint_policy" />
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="TryRestoreOrLogin">
+      <soap12:operation soapAction="http://proxyrental.org/SoapClientService/TryRestoreOrLogin" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Logout">
+      <soap12:operation soapAction="http://proxyrental.org/SoapClientService/Logout" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Synchronize">
+      <soap12:operation soapAction="http://proxyrental.org/SoapClientService/Synchronize" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SynchronizeAll">
+      <soap12:operation soapAction="http://proxyrental.org/SoapClientService/SynchronizeAll" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangeProxy">
+      <soap12:operation soapAction="http://proxyrental.org/SoapClientService/ChangeProxy" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetProxyInfo">
+      <soap12:operation soapAction="http://proxyrental.org/SoapClientService/GetProxyInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFilterList">
+      <soap12:operation soapAction="http://proxyrental.org/SoapClientService/GetFilterList" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetProxyFilter">
+      <soap12:operation soapAction="http://proxyrental.org/SoapClientService/SetProxyFilter" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetProxyFilters">
+      <soap12:operation soapAction="http://proxyrental.org/SoapClientService/GetProxyFilters" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetProxyFilters">
+      <soap12:operation soapAction="http://proxyrental.org/SoapClientService/SetProxyFilters" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SynchronizeV2">
+      <soap12:operation soapAction="http://proxyrental.org/SoapClientService/SynchronizeV2" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SoapClientService">
+    <wsdl:port name="soapEndPoint" binding="tns:soapEndPoint">
+      <soap12:address location="http://50.30.36.26:45679/ProxyRental/SoapClientService" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>http://50.30.36.26:45679/ProxyRental/SoapClientService</wsa10:Address>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
