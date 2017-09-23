@@ -93,8 +93,8 @@
                 IPSite directEndPoint = new IPSite();
                 directEndPoint.IP = webSiteToCheckYourIP.Host;
                 directEndPoint.Port = 80;//default http port
-                string userName = "redfox3";// these values should be replaced with the actual user name and password
-                string userPwd = "gotech123";
+                string userName = "*******";// these values should be replaced with the actual user name and password
+                string userPwd = "*********";
                 // Create Proxy Rental service client
                 using (SoapClientServiceClient client = new SoapClientServiceClient())
                 {
